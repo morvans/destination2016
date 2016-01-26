@@ -4,7 +4,7 @@ var templateUrl = require('./main.html');
 
 
 angular
-    .module('quiz.main')
+    .module('jackpot.main')
     .directive('main', Main);
 
 

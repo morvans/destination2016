@@ -6,7 +6,7 @@ window.AtelierGalleryPixi = require('./pixi/AtelierGalleryPixi');
 window.AtelierStagePixi = require('./pixi/AtelierStagePixi');
 
 
-module.exports = angular.module('quiz.tournette', [
+module.exports = angular.module('jackpot.tournette', [
   'madeinlune.pixi'
 ]).name;
 

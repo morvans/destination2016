@@ -1,11 +1,9 @@
 require('./index.scss');
-require('soundmanager2');
 require('./madeinlune/system');
 
 var angular = require('angular');
 
-
-angular.module('quiz', [
+angular.module('jackpot', [
     'madeinlune.system',
     require('./main')
 ]);

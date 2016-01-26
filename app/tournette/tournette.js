@@ -4,7 +4,7 @@ var templateUrl = require('./tournette.html');
 
 
 angular
-  .module('quiz.tournette')
+  .module('jackpot.tournette')
   .directive('tournette', Main);
 
 

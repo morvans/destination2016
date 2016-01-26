@@ -1,7 +1,6 @@
 'use strict';
 
-module.exports = angular.module('quiz.main', [
-    require('../player'),
+module.exports = angular.module('jackpot.main', [
     require('../tournette')
 ]).name;
 

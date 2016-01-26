@@ -4,7 +4,7 @@ var AtelierGalleryPixi = require('./pixi/AtelierGalleryPixi');
 
 
 angular
-  .module('quiz.tournette')
+  .module('jackpot.tournette')
   .controller('TournetteController', TournetteController);
 
 
