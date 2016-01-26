@@ -111,7 +111,13 @@ module.exports = {
           })
         ]
       }
+    ],
+    postLoaders: [
+      {
+        include: path.resolve(__dirname, 'node_modules/pixi.js'),
+        loader: 'transform?brfs'
+      }
     ]
   },
-  postcss: [ autoprefixer({ browsers: ['last 2 versions'] }) ]
+  postcss: [ autoprefixer({ browsers: ['last 2 versions'] }) ],
 };

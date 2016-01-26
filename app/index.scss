@@ -4,4 +4,61 @@ $OpenSansPath: "~open-sans-fontface/fonts";
 @import "bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 @import "open-sans-fontface/open-sans.scss";
 
+@import "tournette/tournette";
 
+.l-main {
+  width: 100%;
+}
+
+
+/* entire container, keeps perspective */
+.flip-container {
+  perspective: 1000;
+}
+
+.flip-container, .front, .back {
+  width: 100%;
+  height: 300px;
+}
+
+/* flip speed goes here */
+.flipper {
+  transition: 0.6s;
+  transform-style: preserve-3d;
+
+  position: relative;
+}
+
+/* hide back of pane during swap */
+.front, .back {
+  backface-visibility: hidden;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* front pane, placed above back */
+.front {
+  z-index: 2;
+  /* for firefox 31 */
+  transform: rotateY(0deg);
+}
+
+/* back, initially hidden pane */
+.back {
+  transform: rotateY(180deg);
+}
+
+.flip-container.flip .flipper {
+  transform: rotateY(180deg);
+}
+
+.back {
+  text-align: center;
+}
+
+.bullets {
+
+  text-align: center;
+}
