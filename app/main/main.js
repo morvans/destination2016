@@ -12,7 +12,7 @@ Main.$inject = [];
 
 function Main() {
 
-    var directive = {
+    return {
         scope: true,
         restrict: 'E',
         controller: 'MainController',
@@ -22,9 +22,7 @@ function Main() {
         replace: true
     };
 
-    return directive;
-
-    function linkFunc(scope, element, attr, appGroundController) {
+    function linkFunc() {
 
         function activate() {
         }

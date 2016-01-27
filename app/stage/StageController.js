@@ -16,9 +16,6 @@ function StageController($rootScope, $q, $log) {
 
   var vm = this;
 
-  var containerWidth;
-  var containerHeight;
-
   var items = [
     require('../data/galleries/01/DSC_1672sq.JPG'),
     require('../data/galleries/01/DSC_1724sq.JPG'),
@@ -57,8 +54,8 @@ function StageController($rootScope, $q, $log) {
     maskLeft.endFill();
 
     var maskMiddle = new PIXI.Graphics();
-    maskMiddle.clear(0, 0);
-    maskMiddle.beginFill();
+    maskMiddle.clear();
+    maskMiddle.beginFill(0, 0);
     maskMiddle.drawRect((pictureWidth - middlePartWidth) / 2 + gap / 2, 0, middlePartWidth - gap, pictureHeight);
     maskMiddle.endFill();
 
@@ -149,7 +146,7 @@ function StageController($rootScope, $q, $log) {
       var sprite = sprites[i][spriteIndex];
       sprite.alpha = 1;
       var enterDuration = 2;
-      var pauseDuration = 3;
+      //var pauseDuration = 3;
       if (direction == 'topBottom') {
         itemTimeline.add(TweenLite.fromTo(sprite.tilePosition, enterDuration + i, {y: 0}, {
           y: sprite._texture.baseTexture.height * 10,
@@ -204,27 +201,6 @@ function StageController($rootScope, $q, $log) {
     });
 
     return deferred.promise;
-
-  }
-
-  vm.resized = function resized(w, h) {
-
-    containerWidth = w;
-    containerHeight = h;
-
-    resize();
-  };
-
-  function resize() {
-
-    $log.debug('resize: ' + pictureWidth + ' in ' + containerWidth);
-
-    //var scale = containerWidth / pictureWidth;
-
-    $log.debug("scale:" + scale);
-
-    //stage.scale.x = scale;
-    //stage.scale.y = scale;
 
   }
 

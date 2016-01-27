@@ -12,7 +12,7 @@ Stage.$inject = [];
 
 function Stage() {
 
-  var directive = {
+  return {
     scope: true,
     restrict: 'E',
     controller: 'StageController',
@@ -22,9 +22,7 @@ function Stage() {
     replace: true
   };
 
-  return directive;
-
-  function linkFunc(scope, element, attr, stageController, $window, $log) {
+  function linkFunc(scope, element, attr, stageController, $window) {
 
     var renderer,stage;
 
@@ -46,7 +44,6 @@ function Stage() {
 
     stageController.initializeStage(stage);
     invalidateSize();
-    //stageController.resized(element[0].offsetWidth, element[0].offsetWidth);
 
     TweenLite.ticker.addEventListener("tick", function(){
       renderer.render(stage);
