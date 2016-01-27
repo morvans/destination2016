@@ -207,7 +207,7 @@ AtelierGalleryPixi.prototype.triggerEnterEffect = function (sprite) {
     //starts
     var enterDuration;
     if (this.contentReset == false) {
-        enterDuration = 1;
+        enterDuration = 3;
         if (this.direction == 'topBottom') {
             itemTimeline.add(TweenLite.fromTo(sprite.tilePosition, enterDuration, {y: 0}, {y: spriteTexture.baseTexture.height * 10, ease: 'Power3.easeInOut'}), 0);
         } else {
@@ -223,7 +223,7 @@ AtelierGalleryPixi.prototype.triggerEnterEffect = function (sprite) {
     itemTimeline.addCallback(this.onSlideEnterComplete, "+=0", [this]);
     //console.log('this.timeline.duration() : '+this.timeline.duration());
     //pause
-    var pauseDuration = 1;
+    var pauseDuration = 2;
     itemTimeline.set({}, {}, pauseDuration);
     itemTimeline.play();
     this.currentTimeline = itemTimeline;
@@ -301,6 +301,9 @@ AtelierGalleryPixi.prototype.invalidateSize = function () {
             var scale = Math.max(this.width / sprite.width, this.height / sprite.height);
             sprite.scale.x = scale;
             sprite.x = (this.width - (sprite.width * scale)) / 2;
+            if(this.offset){
+              sprite.x += this.offset;
+            }
             sprite.scale.y = scale;
             sprite.y = (this.height - (sprite.height * scale)) / 2;
         }

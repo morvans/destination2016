@@ -1,8 +1,9 @@
 var angular = require('angular');
 
 'use strict';
-angular
-  .module('madeinlune.system', []);
+module.exports = angular
+  .module('madeinlune.system', [])
+  .name;
 
 require('./page-visibility');
 require('./request-animation-frame-manager');

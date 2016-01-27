@@ -1,55 +1,55 @@
-(function () {
-    'use strict';
+'use strict';
 
-    /**
-     * @ngdoc service
-     * @name medicisAngularApp.responsiveService
-     * @description
-     * # responsiveService
-     * Service in the medicisAngularApp.
-     */
-    angular.module('madeinlune.system')
-        .service('requestAnimationFrameManager', RequestAnimationFrameManager);
+require('gsap');
 
-    RequestAnimationFrameManager.$inject = [];
+/**
+ * @ngdoc service
+ * @name medicisAngularApp.responsiveService
+ * @description
+ * # responsiveService
+ * Service in the medicisAngularApp.
+ */
+angular.module('madeinlune.system')
+  .service('requestAnimationFrameManager', RequestAnimationFrameManager);
 
-    function RequestAnimationFrameManager() {
+RequestAnimationFrameManager.$inject = [];
 
-        var requestAnimationFrameManager = {};
+function RequestAnimationFrameManager() {
 
-        var _contexts = {};
+  var requestAnimationFrameManager = {};
 
-        requestAnimationFrameManager.start = function () {
-            TweenLite.ticker.addEventListener("tick", onEnterFrame);
+  var _contexts = {};
+
+  requestAnimationFrameManager.start = function () {
+    TweenLite.ticker.addEventListener("tick", onEnterFrame);
+  }
+
+  requestAnimationFrameManager.stop = function () {
+    TweenLite.ticker.removeEventListener("tick", onEnterFrame);
+  }
+
+  function onEnterFrame() {
+    if (_contexts) {
+      for (var key in _contexts) {
+        var context = _contexts[key];
+        if (typeof context.onEnterFrame == 'function') {
+          context.onEnterFrame();
         }
-
-        requestAnimationFrameManager.stop = function () {
-            TweenLite.ticker.removeEventListener("tick", onEnterFrame);
-        }
-
-        function onEnterFrame() {
-            if (_contexts) {
-                for (var key in _contexts) {
-                    var context = _contexts[key];
-                    if (typeof context.onEnterFrame == 'function') {
-                        context.onEnterFrame();
-                    }
-                }
-            }
-        }
-
-        requestAnimationFrameManager.addContext = function (key, context) {
-            if (!_contexts[key]) {
-                _contexts[key] = context;
-            }
-        }
-
-        requestAnimationFrameManager.removeContext = function (key) {
-            if (_contexts[key]) {
-                delete _contexts[key];
-            }
-        }
-
-        return requestAnimationFrameManager;
+      }
     }
-})();
+  }
+
+  requestAnimationFrameManager.addContext = function (key, context) {
+    if (!_contexts[key]) {
+      _contexts[key] = context;
+    }
+  }
+
+  requestAnimationFrameManager.removeContext = function (key) {
+    if (_contexts[key]) {
+      delete _contexts[key];
+    }
+  }
+
+  return requestAnimationFrameManager;
+}

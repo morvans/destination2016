@@ -112,7 +112,7 @@ AtelierStagePixi.prototype.onGalleryStarted = function () {
 };
 
 AtelierStagePixi.prototype.onGalleryComplete = function () {
-  this.currentGallery.pause();
+    this.currentGallery.pause();
     this.emit('pixiEvent', {type: 'galleryComplete'});
 };
 

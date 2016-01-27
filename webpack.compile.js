@@ -44,6 +44,7 @@ module.exports = {
         }
       }
     ),
+    new webpack.optimize.UglifyJsPlugin({minimize: true}),
     new ExtractTextPlugin("[name].css"),
     new webpack.HotModuleReplacementPlugin(),
     //new AppCachePlugin({
@@ -62,12 +63,6 @@ module.exports = {
   ],
   module: {
     loaders: [
-      {
-        test: /angular\.js$/, loader: 'exports?angular'
-      },
-      {
-        test: /angular-localForage\.js$/, loader: 'imports?this=>{angular: angular}'
-      },
       {
         test: /\.html$/,
         loader: 'ngtemplate?relativeTo=' + (path.resolve(__dirname, './app')) + '/!html'
@@ -89,7 +84,7 @@ module.exports = {
         loader: 'json-loader'
       },
       {
-        test: /(images|icons)\/.*\.(gif|png|jpe?g|svg)$/i,
+        test: /data\/.*\.(gif|png|jpe?g|svg)$/i,
         loaders: [
           'file-loader?name=assets/images/[name].[hash:6].[ext]',
           'image-webpack?'+JSON.stringify(options.imagemin)
@@ -119,5 +114,5 @@ module.exports = {
       }
     ]
   },
-  postcss: [ autoprefixer({ browsers: ['last 2 versions'] }) ],
+  postcss: [ autoprefixer({ browsers: ['last 4 versions'] }) ],
 };

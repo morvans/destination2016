@@ -1,15 +1,21 @@
 'use strict';
 
-var PIXI = require('pixi.js');
-
 
 angular.module('jackpot.main')
     .controller('MainController', MainController);
 
-MainController.$inject = ['$log', '$timeout', '$window'];
+MainController.$inject = ['$rootScope'];
 
-function MainController($log, $timeout, $window) {
+function MainController($rootScope) {
 
+
+  var vm = this;
+
+  vm.random = function random(){
+
+    $rootScope.$broadcast('randomClicked');
+
+  };
 
 
 }
