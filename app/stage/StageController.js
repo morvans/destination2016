@@ -171,14 +171,13 @@ function StageController($rootScope, $q, $log) {
   }
 
   function attemptFinished() {
-    $log.debug('attemptFinished');
     attemptCount++;
     if (_.every(attempt, function (item) {
         return item == attempt[0];
       })) {
-      $log.debug('win');
+      $rootScope.$broadcast('attemptFailed');
     }else{
-      $log.debug('loz');
+      $rootScope.$broadcast('attemptSucceeded');
     }
   }
 
