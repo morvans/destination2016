@@ -8,20 +8,19 @@
 
         <stage></stage>
 
-      </div>
+        <div nng-if="mainController.showGreeting">
+          Bonne année !
+        </div>
 
-      <div class="l-btn-container">
-
-        <button class="btn btn-default" ng-click="mainController.random()">Nouvel essai !</button>
-
-        <span ng-bind-html="mainController.attemptStatus"></span>
+        <div class="l-btn-container">
+          <button class="btn btn-default btn-go" ng-click="mainController.random()">{{mainController.btnLabel}}</button>
+        </div>
 
       </div>
 
     </div>
 
   </div>
-
 
 </div>
 
