@@ -7,9 +7,9 @@ var PIXI = require('pixi.js');
 angular.module('jackpot.stage')
   .controller('StageController', StageController);
 
-StageController.$inject = ['$rootScope', '$q', '$log'];
+StageController.$inject = ['$rootScope', '$q', '$log', 'PlayerService'];
 
-function StageController($rootScope, $q, $log) {
+function StageController($rootScope, $q, $log, PlayerService) {
 
   var attempt = [];
   var attemptCount = 0;
@@ -22,6 +22,18 @@ function StageController($rootScope, $q, $log) {
     require('../data/galleries/01/DSC_1725sq.JPG'),
     require('../data/galleries/01/DSC_1723sq.JPG')
   ];
+
+  var failSounds = [
+    require('../data/sounds/sam-again-1.mp3'),
+    require('../data/sounds/sam-ohnon-1.mp3'),
+    require('../data/sounds/sam-ohnon-2.mp3'),
+    require('../data/sounds/sol-again-1.mp3'),
+    require('../data/sounds/sol-again-2.mp3'),
+    require('../data/sounds/sol-again-3.mp3'),
+    require('../data/sounds/sol-why-1.mp3')
+  ];
+
+  var failSoundIdList = [];
 
   var middlePartWidth = 200;
   var pictureWidth = 680;
@@ -96,11 +108,14 @@ function StageController($rootScope, $q, $log) {
 
       }
 
+    }).then(function(){
       random();
-
-
     });
-
+    PlayerService.initialize().then(function () {
+      return preloadSounds();
+    }).then(function (idList) {
+      failSoundIdList = idList;
+    });
 
   };
 
@@ -168,6 +183,7 @@ function StageController($rootScope, $q, $log) {
     $log.debug(attemptCount + ' > ' + attempt);
 
     timeline.play();
+
   }
 
   function attemptFinished() {
@@ -175,9 +191,17 @@ function StageController($rootScope, $q, $log) {
     if (_.every(attempt, function (item) {
         return item == attempt[0];
       })) {
-      $rootScope.$broadcast('attemptFailed');
-    }else{
       $rootScope.$broadcast('attemptSucceeded');
+    }else{
+      $rootScope.$broadcast('attemptFailed');
+      playFail();
+    }
+  }
+
+  function playFail(){
+    if(failSoundIdList.length > 0){
+      var id = failSoundIdList[_.random(0, failSoundIdList.length - 1)].split('/').pop();
+      soundManager.getSoundById(id).play();
     }
   }
 
@@ -202,6 +226,69 @@ function StageController($rootScope, $q, $log) {
     return deferred.promise;
 
   }
+
+  function preloadSounds(){
+
+    var deferred = $q.defer();
+
+    var loaded = [];
+
+    function loadNext(list){
+
+      var url = list.shift();
+
+      var id = url.split('/').pop();
+
+      soundManager.createSound({
+        id: id,
+        url: url,
+        autoLoad: true,
+        autoPlay: false,
+        onload: function () {
+
+          loaded.push(url);
+
+          if(list.length > 0) {
+            loadNext(list);
+          }else{
+            deferred.resolve(loaded);
+          }
+
+        },
+        volume: 50
+      });
+
+
+    }
+
+    loadNext(failSounds);
+
+    return deferred.promise;
+    //
+    //return $q.all(
+    //  _.map(failSounds, function (url) {
+    //    var deferred = $q.defer();
+    //
+    //    var id = url.split('/').pop();
+    //
+    //    soundManager.createSound({
+    //      id: id,
+    //      url: url,
+    //      autoLoad: true,
+    //      autoPlay: false,
+    //      onload: function () {
+    //        deferred.resolve(url);
+    //      },
+    //      volume: 50
+    //    });
+    //
+    //    return deferred.promise;
+    //  }));
+    //
+
+  }
+
+
 
   activate();
 

@@ -44,7 +44,7 @@ module.exports = {
         }
       }
     ),
-    new webpack.optimize.UglifyJsPlugin({minimize: true}),
+    //new webpack.optimize.UglifyJsPlugin({minimize: true}),
     new ExtractTextPlugin("[name].css"),
     new webpack.HotModuleReplacementPlugin(),
     //new AppCachePlugin({
@@ -88,6 +88,12 @@ module.exports = {
         loaders: [
           'file-loader?name=assets/images/[name].[hash:6].[ext]',
           'image-webpack?'+JSON.stringify(options.imagemin)
+        ]
+      },
+      {
+        test: /data\/.*\.mp3$/i,
+        loaders: [
+          'file-loader?name=assets/sounds/[name].[hash:6].[ext]'
         ]
       },
       {
