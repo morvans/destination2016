@@ -1,26 +1,17 @@
-<div class="container">
+<div class="l-jp-container">
 
-  <div class="row">
+  <stage btn-height="mainController.btnHeight"></stage>
 
-    <div class="col-lg-6 col-lg-offset-3 col-sm-10 col-sm-offset-1 col-xs-12">
-
-      <div class="l-jp-container">
-
-        <stage></stage>
-
-        <div nng-if="mainController.showGreeting">
-          Bonne année !
-        </div>
-
-        <div class="l-btn-container">
-          <button class="btn btn-default btn-go" ng-click="mainController.random()">{{mainController.btnLabel}}</button>
-        </div>
-
-      </div>
-
+  <div class="l-btn-container">
+    <div>
+      <h2 ng-if="mainController.showGreeting">Bonne année 2016 !</h2>
+      <button class="btn btn-default btn-go"
+              ng-class="{'btn-warning':mainController.attemptStatus == 'failure', 'btn-success':mainController.attemptStatus == 'success'}"
+              ng-click="mainController.random()">
+        <span ng-if="mainController.attemptStatus == 'pending'" class="glyphicon glyphicon-time"></span>
+        {{mainController.btnLabel}}
+      </button>
     </div>
-
   </div>
 
 </div>
-

@@ -8,9 +8,9 @@ angular
   .module('jackpot.stage')
   .directive('stage', Stage);
 
-Stage.$inject = [];
+Stage.$inject = ['$window'];
 
-function Stage() {
+function Stage($window) {
 
   return {
     scope: true,
@@ -22,7 +22,7 @@ function Stage() {
     replace: true
   };
 
-  function linkFunc(scope, element, attr, stageController, $window) {
+  function linkFunc(scope, element, attr, stageController) {
 
     var renderer,stage;
 
@@ -36,11 +36,6 @@ function Stage() {
       invalidateSize();
     });
 
-    scope.$watch(function () {
-      return element[0].offsetHeight;
-    }, function () {
-      invalidateSize();
-    });
 
     stageController.initializeStage(stage);
     invalidateSize();
@@ -51,9 +46,10 @@ function Stage() {
 
 
     function invalidateSize () {
-      var scale = element[0].offsetWidth / 680;
+      var dim = Math.min(element[0].offsetWidth, element[0].offsetHeight - 65) - 20;
+      var scale = dim / 680;
       stage.scale.x = stage.scale.y = scale;
-      renderer.resize( element[0].offsetWidth, element[0].offsetWidth);
+      renderer.resize( dim, dim );
     }
   }
 }

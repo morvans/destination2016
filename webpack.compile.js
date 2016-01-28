@@ -33,7 +33,7 @@ module.exports = {
   },
   output: {
     path: "dist",
-    publicPath:"/",
+    publicPath:"",
     filename: "scripts/[name]-[hash:6].js"
   },
   plugins: [
@@ -44,7 +44,7 @@ module.exports = {
         }
       }
     ),
-    //new webpack.optimize.UglifyJsPlugin({minimize: true}),
+    new webpack.optimize.UglifyJsPlugin({minimize: true}),
     new ExtractTextPlugin("[name].css"),
     new webpack.HotModuleReplacementPlugin(),
     //new AppCachePlugin({

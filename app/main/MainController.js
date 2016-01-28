@@ -1,5 +1,7 @@
 'use strict';
 
+var angular = require('angular');
+
 angular.module('jackpot.main')
   .controller('MainController', MainController);
 
@@ -42,7 +44,7 @@ function MainController($rootScope, $scope) {
         case 'failure':
           return 'Essayez encore !';
         default:
-          return '...';
+          return '';
       }
     }
   })
