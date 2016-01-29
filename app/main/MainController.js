@@ -5,9 +5,9 @@ var angular = require('angular');
 angular.module('jackpot.main')
   .controller('MainController', MainController);
 
-MainController.$inject = ['$rootScope', '$scope'];
+MainController.$inject = ['$rootScope', '$scope', '$window', '$timeout'];
 
-function MainController($rootScope, $scope) {
+function MainController($rootScope, $scope, $window, $timeout) {
 
   var vm = this;
 
@@ -27,6 +27,16 @@ function MainController($rootScope, $scope) {
       vm.attemptStatus = 'success';
       $scope.$digest();
     });
+
+
+    $window.addEventListener('keydown',function (event) {
+      if(event.keyCode == 32){
+        $timeout(function(){
+          vm.random();
+        });
+      }
+    },false);
+
 
   }
 
