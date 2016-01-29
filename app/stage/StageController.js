@@ -24,18 +24,24 @@ function StageController($rootScope, $q, $log, PlayerService) {
   ];
 
   var failSounds = [
-    require('../data/sounds/sol-again-1.mp3'),
-    require('../data/sounds/sol-again-2.mp3'),
-    require('../data/sounds/sol-again-3.mp3'),
-    require('../data/sounds/sol-why-1.mp3')
+    require('../data/sounds/ko/sol-again-1.mp3'),
+    require('../data/sounds/ko/sol-again-2.mp3'),
+    require('../data/sounds/ko/sol-again-3.mp3'),
+    require('../data/sounds/ko/sol-why-1.mp3'),
+    require('../data/sounds/ko/sam-again-1.mp3'),
+    require('../data/sounds/ko/sam-ohnon-1.mp3'),
+    require('../data/sounds/ko/sam-ohnon-2.mp3')
   ];
 
   var failSoundIdList = [];
 
   var successSounds = [
-    require('../data/sounds/sam-again-1.mp3'),
-    require('../data/sounds/sam-ohnon-1.mp3'),
-    require('../data/sounds/sam-ohnon-2.mp3'),
+    require('../data/sounds/ok/all-bravo-gagne+ba-1.mp3'),
+    require('../data/sounds/ok/all-ouais+ba-1.mp3'),
+    require('../data/sounds/ok/all-ouais-1.mp3'),
+    require('../data/sounds/ok/all-super-1.mp3'),
+    require('../data/sounds/ok/sol-bravo-1.mp3'),
+    require('../data/sounds/ok/sol-champion+all-1.mp3')
   ];
 
   var successSoundIdList = [];
