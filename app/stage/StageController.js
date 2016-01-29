@@ -24,9 +24,6 @@ function StageController($rootScope, $q, $log, PlayerService) {
   ];
 
   var failSounds = [
-    require('../data/sounds/sam-again-1.mp3'),
-    require('../data/sounds/sam-ohnon-1.mp3'),
-    require('../data/sounds/sam-ohnon-2.mp3'),
     require('../data/sounds/sol-again-1.mp3'),
     require('../data/sounds/sol-again-2.mp3'),
     require('../data/sounds/sol-again-3.mp3'),
@@ -34,6 +31,14 @@ function StageController($rootScope, $q, $log, PlayerService) {
   ];
 
   var failSoundIdList = [];
+
+  var successSounds = [
+    require('../data/sounds/sam-again-1.mp3'),
+    require('../data/sounds/sam-ohnon-1.mp3'),
+    require('../data/sounds/sam-ohnon-2.mp3'),
+  ];
+
+  var successSoundIdList = [];
 
   var middlePartWidth = 200;
   var pictureWidth = 680;
@@ -113,8 +118,9 @@ function StageController($rootScope, $q, $log, PlayerService) {
     });
     PlayerService.initialize().then(function () {
       return preloadSounds();
-    }).then(function (idList) {
-      failSoundIdList = idList;
+    }).then(function (idLists) {
+      failSoundIdList = idLists[0];
+      successSoundIdList = idLists[1];
     });
 
   };
@@ -180,7 +186,7 @@ function StageController($rootScope, $q, $log, PlayerService) {
 
     }
 
-    $log.debug(attemptCount + ' > ' + attempt);
+    $log.debug('⚒ (' + attemptCount + ') : ' + attempt);
 
     timeline.play();
 
@@ -192,6 +198,7 @@ function StageController($rootScope, $q, $log, PlayerService) {
         return item == attempt[0];
       })) {
       $rootScope.$broadcast('attemptSucceeded');
+      playSuccess();
     }else{
       $rootScope.$broadcast('attemptFailed');
       playFail();
@@ -199,8 +206,17 @@ function StageController($rootScope, $q, $log, PlayerService) {
   }
 
   function playFail(){
-    if(failSoundIdList.length > 0){
-      var id = failSoundIdList[_.random(0, failSoundIdList.length - 1)].split('/').pop();
+    playRandomFrom(failSoundIdList);
+  }
+
+  function playSuccess(){
+    playRandomFrom(successSoundIdList);
+  }
+
+  function playRandomFrom(from){
+    if(from.length > 0){
+      var id = from[_.random(0, from.length - 1)];
+      $log.debug('♫ ' + id);
       soundManager.getSoundById(id).play();
     }
   }
@@ -214,12 +230,6 @@ function StageController($rootScope, $q, $log, PlayerService) {
       return {url: item, crossOrigin: true, loadType: 2};
     }));
     loader.load(function (loader, resources) {
-      // resources is an object where the key is the name of the resource loaded and the value is the resource object.
-      // They have a couple default properties:
-      // - `url`: The URL that the resource was loaded from
-      // - `error`: The error that happened when trying to load (if any)
-      // - `data`: The raw data that was loaded
-      // also may contain other properties based on the middleware that runs.
       deferred.resolve(resources);
     });
 
@@ -229,62 +239,50 @@ function StageController($rootScope, $q, $log, PlayerService) {
 
   function preloadSounds(){
 
-    var deferred = $q.defer();
+    function loadSounds(list) {
 
-    var loaded = [];
+      var deferred = $q.defer();
 
-    function loadNext(list){
+      var loaded = [];
 
-      var url = list.shift();
+      function loadNext(list) {
 
-      var id = url.split('/').pop();
+        var url = list.shift();
 
-      soundManager.createSound({
-        id: id,
-        url: url,
-        autoLoad: true,
-        autoPlay: false,
-        onload: function () {
+        var id = url.split('/').pop();
 
-          loaded.push(url);
+        soundManager.createSound({
+          id: id,
+          url: url,
+          autoLoad: true,
+          autoPlay: false,
+          onload: function () {
 
-          if(list.length > 0) {
-            loadNext(list);
-          }else{
-            deferred.resolve(loaded);
-          }
+            loaded.push(id);
 
-        },
-        volume: 50
-      });
+            if (list.length > 0) {
+              loadNext(list);
+            } else {
+              deferred.resolve(loaded);
+            }
 
+          },
+          volume: 50
+        });
+
+
+      }
+
+      loadNext(list);
+
+      return deferred.promise;
 
     }
 
-    loadNext(failSounds);
-
-    return deferred.promise;
-    //
-    //return $q.all(
-    //  _.map(failSounds, function (url) {
-    //    var deferred = $q.defer();
-    //
-    //    var id = url.split('/').pop();
-    //
-    //    soundManager.createSound({
-    //      id: id,
-    //      url: url,
-    //      autoLoad: true,
-    //      autoPlay: false,
-    //      onload: function () {
-    //        deferred.resolve(url);
-    //      },
-    //      volume: 50
-    //    });
-    //
-    //    return deferred.promise;
-    //  }));
-    //
+    return $q.all([
+      loadSounds(failSounds),
+      loadSounds(successSounds),
+    ]);
 
   }
 

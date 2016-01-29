@@ -17,10 +17,11 @@ function PlayerService($q) {
         soundManager.setup({
             'url': '/data/swf/',
             'preferFlash': false,
-            onready: function () {
+            'debugMode': false,
+            'onready': function () {
                 deferred.resolve();
             },
-            ontimeout: function () {
+            'ontimeout': function () {
                 deferred.reject();
             }
         });
