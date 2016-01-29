@@ -24,16 +24,19 @@ function StageController($rootScope, $q, $log, PlayerService) {
   ];
 
   var failSounds = [
-    require('../data/sounds/ko/sol-again-1.mp3'),
-    require('../data/sounds/ko/sol-again-2.mp3'),
-    require('../data/sounds/ko/sol-again-3.mp3'),
-    require('../data/sounds/ko/sol-why-1.mp3'),
     require('../data/sounds/ko/sam-again-1.mp3'),
     require('../data/sounds/ko/sam-ohnon-1.mp3'),
-    require('../data/sounds/ko/sam-ohnon-2.mp3')
+    require('../data/sounds/ko/sam-ohnon-2.mp3'),
+    require('../data/sounds/ko/sarah-dommage.mp3'),
+    require('../data/sounds/ko/sarah-fail.mp3'),
+    require('../data/sounds/ko/sarah-ohnon.mp3'),
+    require('../data/sounds/ko/simon-again.mp3'),
+    require('../data/sounds/ko/simon-dommage.mp3'),
+    require('../data/sounds/ko/sol-again-1.mp3'),
+    //require('../data/sounds/ko/sol-again-2.mp3'),
+    require('../data/sounds/ko/sol-again-3.mp3'),
+    require('../data/sounds/ko/sol-why-1.mp3')
   ];
-
-  var failSoundIdList = [];
 
   var successSounds = [
     require('../data/sounds/ok/all-bravo-gagne+ba-1.mp3'),
@@ -43,8 +46,6 @@ function StageController($rootScope, $q, $log, PlayerService) {
     require('../data/sounds/ok/sol-bravo-1.mp3'),
     require('../data/sounds/ok/sol-champion+all-1.mp3')
   ];
-
-  var successSoundIdList = [];
 
   var middlePartWidth = 200;
   var pictureWidth = 680;
@@ -122,12 +123,8 @@ function StageController($rootScope, $q, $log, PlayerService) {
     }).then(function(){
       random();
     });
-    PlayerService.initialize().then(function () {
-      return preloadSounds();
-    }).then(function (idLists) {
-      failSoundIdList = idLists[0];
-      successSoundIdList = idLists[1];
-    });
+
+    PlayerService.initialize();
 
   };
 
@@ -194,36 +191,35 @@ function StageController($rootScope, $q, $log, PlayerService) {
 
     $log.debug('⚒ (' + attemptCount + ') : ' + attempt);
 
+    if (attemptCount == 4) {
+      PlayerService.prepare(successSounds[0]);
+    } else {
+      prepareRandomSoundFrom(isSuccess() ? successSounds : failSounds);
+    }
+
     timeline.play();
 
   }
 
   function attemptFinished() {
     attemptCount++;
-    if (_.every(attempt, function (item) {
-        return item == attempt[0];
-      })) {
+    if (isSuccess(attempt)) {
       $rootScope.$broadcast('attemptSucceeded');
-      playSuccess();
     }else{
       $rootScope.$broadcast('attemptFailed');
-      playFail();
     }
+    PlayerService.play();
   }
 
-  function playFail(){
-    playRandomFrom(failSoundIdList);
+  function isSuccess(){
+    return attempt[0] === attempt[1] && attempt[1] === attempt[2];
   }
 
-  function playSuccess(){
-    playRandomFrom(successSoundIdList);
-  }
 
-  function playRandomFrom(from){
+  function prepareRandomSoundFrom(from){
     if(from.length > 0){
-      var id = from[_.random(0, from.length - 1)];
-      $log.debug('♫ ' + id);
-      soundManager.getSoundById(id).play();
+      var url = from[_.random(0, from.length - 1)];
+      PlayerService.prepare(url);
     }
   }
 
@@ -242,57 +238,6 @@ function StageController($rootScope, $q, $log, PlayerService) {
     return deferred.promise;
 
   }
-
-  function preloadSounds(){
-
-    function loadSounds(list) {
-
-      var deferred = $q.defer();
-
-      var loaded = [];
-
-      function loadNext(list) {
-
-        var url = list.shift();
-
-        var id = url.split('/').pop();
-
-        soundManager.createSound({
-          id: id,
-          url: url,
-          autoLoad: true,
-          autoPlay: false,
-          onload: function () {
-
-            loaded.push(id);
-
-            if (list.length > 0) {
-              loadNext(list);
-            } else {
-              deferred.resolve(loaded);
-            }
-
-          },
-          volume: 50
-        });
-
-
-      }
-
-      loadNext(list);
-
-      return deferred.promise;
-
-    }
-
-    return $q.all([
-      loadSounds(failSounds),
-      loadSounds(successSounds),
-    ]);
-
-  }
-
-
 
   activate();
 

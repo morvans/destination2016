@@ -4,31 +4,66 @@ require('soundmanager2');
 
 angular.module('jackpot.player').service('PlayerService', PlayerService);
 
-PlayerService.$inject = ['$q'];
+PlayerService.$inject = ['$q', '$log'];
 
-function PlayerService($q) {
+function PlayerService($q, $log) {
 
-    var service = this;
+  var service = this;
 
-    service.initialize = function initialize() {
+  var ready = false;
 
-        var deferred = $q.defer();
+  var pending, pendingSound;
 
-        soundManager.setup({
-            'url': '/data/swf/',
-            'preferFlash': false,
-            'debugMode': false,
-            'onready': function () {
-                deferred.resolve();
-            },
-            'ontimeout': function () {
-                deferred.reject();
-            }
-        });
+  service.initialize = function initialize() {
 
-        return deferred.promise;
+    var deferred = $q.defer();
+
+    soundManager.setup({
+      'url': '/data/swf/',
+      'preferFlash': false,
+      'debugMode': true,
+      'onready': function () {
+        ready = true;
+        deferred.resolve();
+        if(pending){
+          service.prepare(pending);
+        }
+      },
+      'ontimeout': function () {
+        deferred.reject();
+      }
+    });
+
+    return deferred.promise;
 
 
+  };
+
+  service.prepare = function prepare(url) {
+    if (ready) {
+      if(pendingSound){
+        pendingSound.destruct();
+      }
+      pendingSound = soundManager.createSound({'url':url, 'autoPlay':false, 'autoLoad': true});
+      $log.debug('♫ Prepared sound: ' + pendingSound.id);
+      pending = null;
+    }else{
+      $log.debug('♫ PlayerService not ready. Pending: ' + url);
+      pending = url;
     }
+  };
+
+  service.play = function play() {
+    if (pendingSound) {
+      var playingSound = pendingSound;
+      pendingSound = null;
+      $log.debug('♫ Play ' + playingSound.id);
+      playingSound.play({'onfinish':function(){
+        $log.debug('♫ Cleanup ' + playingSound.id);
+        playingSound.destruct();
+      }});
+    }
+  };
+
 
 }
