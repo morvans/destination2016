@@ -39,6 +39,13 @@ function StageController($rootScope, $q, $log, PlayerService) {
   ];
 
   var successSounds = [
+    require('../data/sounds/ok/bravo4-05.mp3'),
+    require('../data/sounds/ok/bravo4-01.mp3'),
+    require('../data/sounds/ok/bravo4-02.mp3'),
+    require('../data/sounds/ok/bravo4-03.mp3'),
+    require('../data/sounds/ok/bravo4-04.mp3'),
+    require('../data/sounds/ok/bravo4-06.mp3'),
+    require('../data/sounds/ok/bravo4-07.mp3'),
     require('../data/sounds/ok/all-bravo-gagne+ba-1.mp3'),
     require('../data/sounds/ok/all-ouais+ba-1.mp3'),
     require('../data/sounds/ok/all-ouais-1.mp3'),
