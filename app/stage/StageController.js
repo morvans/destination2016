@@ -149,6 +149,8 @@ function StageController($rootScope, $q, $log, PlayerService) {
     });
     var spriteIndex;
 
+    var karma = _.random(0,3);
+
     attempt = [];
 
     for (var i = 0; i < 3; i++) {
@@ -167,7 +169,15 @@ function StageController($rootScope, $q, $log, PlayerService) {
         }
       }
       else {
-        spriteIndex = _.random(0, sprites[i].length - 1);
+
+        if(karma > 0){
+          spriteIndex = _.random(0, sprites[i].length - 1);
+        }else{
+          if (i == 0) {
+            spriteIndex = _.random(0, sprites[i].length - 1);
+          }
+        }
+
       }
 
       attempt.push(spriteIndex);
@@ -204,6 +214,11 @@ function StageController($rootScope, $q, $log, PlayerService) {
       prepareRandomSoundFrom(isSuccess() ? successSounds : failSounds);
     }
 
+
+    if (ga) {
+      ga('send', 'event', 'GamePlay', 'ClickRandom', isSuccess() ? 'Success' : 'Failure');
+    }
+
     timeline.play();
 
   }
@@ -216,6 +231,18 @@ function StageController($rootScope, $q, $log, PlayerService) {
       $rootScope.$broadcast('attemptFailed');
     }
     PlayerService.play();
+
+    if (ga) {
+      if (attemptCount < 4) {
+        ga('send', 'event', 'GamePlay', 'AttemptPreFinished');
+      } else if (attemptCount == 4) {
+        ga('send', 'event', 'GamePlay', 'AttemptFirstWinFinished');
+      } else {
+        ga('send', 'event', 'GamePlay', 'AttemptPostFinished', isSuccess() ? 'Success' : 'Failure');
+      }
+    }
+
+
   }
 
   function isSuccess(){
